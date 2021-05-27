@@ -1,12 +1,15 @@
-extern crate tokio;
-use std::env;
-
-//use futures::StreamExt;
-use telegram_bot::*;
+use teloxide::prelude::*;
 
 #[tokio::main]
-async fn main() -> Result<(), Error> {
-    let token = env::var("TG_TOKEN").expect("Need TG_TOKEN---");
-    println!("{}",token);
-    Ok(())
+async fn main() {
+    teloxide::enable_logging!();
+    log::info!("Starting dices_bot...");
+
+    let bot = Bot::from_env().auto_send();
+
+    teloxide::repl(bot, |message| async move {
+        message.answer_dice().await?;
+        respond(())
+    })
+    .await;
 }
